@@ -3,10 +3,10 @@ package client
 import (
 	"log"
 
-	"github.com/anbcodes/goguigl/gui"
 	"github.com/go-gl/gl/v4.1-core/gl"
-	"github.com/go-gl/glfw/v3.2/glfw"
+	"github.com/go-gl/glfw/v3.3/glfw"
 	"github.com/jeffbaumes/gogame/pkg/common"
+	"github.com/jeffbaumes/gogame/pkg/gui"
 	"github.com/jeffbaumes/gogame/pkg/scene"
 )
 
