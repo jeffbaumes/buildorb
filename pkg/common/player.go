@@ -8,9 +8,15 @@ import (
 
 // Game modes
 const (
-	Normal       = iota
-	Flying       = iota
-	NumGameModes = iota
+	Normal           = iota
+	Flying           = iota
+	NumMovementModes = iota
+)
+
+// Creative or survival modes
+const (
+	Creative = iota
+	Survival = iota
 )
 
 // Maximum health
@@ -34,6 +40,7 @@ type Player struct {
 	lookAltitude     float64
 	height           float64
 	radius           float64
+	MovementMode     int
 	GameMode         int
 	HoldingJump      bool
 	inJump           bool
@@ -69,14 +76,12 @@ func NewPlayer(name string) *Player {
 	p.WalkVel = 5.0
 	p.height = 2
 	p.radius = 0.25
-	p.GameMode = Normal
+	p.MovementMode = Normal
+	p.GameMode = Survival
 	p.Name = name
 	p.ActiveHotBarSlot = 0
 	p.HotbarOn = true
 	p.renderDistance = 4
-	for i := range p.Hotbar {
-		p.Hotbar[i] = Slot{i + 1, 10}
-	}
 	return &p
 }
 
@@ -184,7 +189,7 @@ func (player *Player) UpdatePosition(h float32) {
 
 	up := player.Location().Normalize()
 	right := player.lookHeading.Cross(up)
-	if player.GameMode == Normal {
+	if player.MovementMode == Normal {
 		feet := player.Location().Sub(up.Mul(float32(player.height)))
 		feetCell := planet.CartesianToCell(feet)
 		falling := feetCell == nil || feetCell.Material == Air
@@ -211,7 +216,7 @@ func (player *Player) UpdatePosition(h float32) {
 			player.collide(planet, float32(height), CellLoc{Lon: 0, Lat: 1, Alt: 0})
 			player.collide(planet, float32(height), CellLoc{Lon: 0, Lat: -1, Alt: 0})
 		}
-	} else if player.GameMode == Flying {
+	} else if player.MovementMode == Flying {
 		LookDir := player.LookDir()
 		player.SetLocation(player.Location().Add(up.Mul((player.UpVel - player.DownVel) * h)))
 		player.SetLocation(player.Location().Add(LookDir.Mul((player.ForwardVel - player.BackVel) * h)))

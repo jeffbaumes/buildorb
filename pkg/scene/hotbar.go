@@ -106,22 +106,47 @@ func (h *Hotbar) computeGeometry(player *common.Player, width, height int) {
 		points = append(points, pts...)
 	}
 	if player.Mode == "Inventory" {
-		for m := 1; m < len(common.Materials); m++ {
-			mx := float32(m % 4)
-			my := float32(m / 4)
-			px := 1.25 * 2 * sz * (float32(m) - float32(len(common.Materials))/2)
-			py := 1 - 0.25*aspect
-			scale := sz
-			pts := make([]float32, 2*len(sq))
-			for i := 0; i < len(sq); i += 2 {
-				pts = append(pts, []float32{
-					px + sq[i+0]*scale,
-					py + sq[i+1]*scale*aspect,
-					(mx + (sq[i+0]+1)/2) / 4,
-					(my + (sq[i+1]+1)/2) / 4,
-				}...)
+		if player.GameMode == common.Creative {
+			for m := 1; m < len(common.Materials); m++ {
+				mx := float32(m % 4)
+				my := float32(m / 4)
+				px := 1.25 * 2 * sz * (float32(m) - float32(len(common.Materials))/2)
+				py := 1 - 0.25*aspect
+				scale := sz
+				pts := make([]float32, 2*len(sq))
+				for i := 0; i < len(sq); i += 2 {
+					pts = append(pts, []float32{
+						px + sq[i+0]*scale,
+						py + sq[i+1]*scale*aspect,
+						(mx + (sq[i+0]+1)/2) / 4,
+						(my + (sq[i+1]+1)/2) / 4,
+					}...)
+				}
+				points = append(points, pts...)
 			}
-			points = append(points, pts...)
+		} else if player.GameMode == common.Survival {
+			for row := 0; row < 1; row++ {
+				for col := 0; col < 12; col++ {
+					slotInd := row*12 + col
+					slot := player.Inventory[slotInd]
+					m := slot.Material
+					mx := float32(m % 4)
+					my := float32(m / 4)
+					px := 1.25 * 2 * sz * (float32(col) - float32(12)/2)
+					py := 1 - 0.25*aspect
+					scale := sz
+					pts := make([]float32, 2*len(sq))
+					for i := 0; i < len(sq); i += 2 {
+						pts = append(pts, []float32{
+							px + sq[i+0]*scale,
+							py + sq[i+1]*scale*aspect,
+							(mx + (sq[i+0]+1)/2) / 4,
+							(my + (sq[i+1]+1)/2) / 4,
+						}...)
+					}
+					points = append(points, pts...)
+				}
+			}
 		}
 	}
 	h.numPoints = int32(len(points) / 4)

@@ -106,6 +106,7 @@ func Start(username, host string, port int, scr *gui.Screen) {
 	t := startTime
 	syncT := t
 	for !window.ShouldClose() {
+		println("hey dad your funny!!!!")
 		h := float32(time.Since(t)) / float32(time.Second)
 		t = time.Now()
 		elapsedSeconds := float64(time.Since(startTime)) / float64(time.Second)

@@ -97,6 +97,8 @@ func keyCallbackInventory(w *glfw.Window, key glfw.Key, scancode int, action glf
 		slot = 10
 	case m["Slot12"].Key:
 		slot = 11
+	case m["Inventory"].Key:
+		player.Mode = "play"
 	}
 	if slot < 0 {
 		return
@@ -104,15 +106,34 @@ func keyCallbackInventory(w *glfw.Window, key glfw.Key, scancode int, action glf
 	xpos, ypos := w.GetCursorPos()
 	winw, winh := w.GetSize()
 	aspect := float32(winw) / float32(winh)
-	for m := range common.Materials {
-		sz := float32(0.03)
-		px := 1.25 * 2 * sz * (float32(m) - float32(len(common.Materials))/2)
-		py := 1 - 0.25*aspect
-		scale := sz
-		xMin, yMin := glToPixel(w, float64(px-scale), float64(py+scale*aspect))
-		xMax, yMax := glToPixel(w, float64(px+scale), float64(py-scale*aspect))
-		if float64(xpos) >= xMin && float64(xpos) <= xMax && float64(ypos) >= yMin && float64(ypos) <= yMax {
-			player.Hotbar[slot] = common.Slot{Material: m, Amount: 10}
+	if player.GameMode == common.Creative {
+		for m := range common.Materials {
+			sz := float32(0.03)
+			px := 1.25 * 2 * sz * (float32(m) - float32(len(common.Materials))/2)
+			py := 1 - 0.25*aspect
+			scale := sz
+			xMin, yMin := glToPixel(w, float64(px-scale), float64(py+scale*aspect))
+			xMax, yMax := glToPixel(w, float64(px+scale), float64(py-scale*aspect))
+			if float64(xpos) >= xMin && float64(xpos) <= xMax && float64(ypos) >= yMin && float64(ypos) <= yMax {
+				player.Hotbar[slot] = common.Slot{Material: m, Amount: 10}
+			}
+		}
+	} else if player.GameMode == common.Survival {
+		for row := 0; row < 1; row++ {
+			for col := 0; col < 12; col++ {
+				slotInd := row*12 + col
+				sz := float32(0.03)
+				px := 1.25 * 2 * sz * (float32(col) - float32(12)/2)
+				py := 1 - 0.25*aspect
+				scale := sz
+				xMin, yMin := glToPixel(w, float64(px-scale), float64(py+scale*aspect))
+				xMax, yMax := glToPixel(w, float64(px+scale), float64(py-scale*aspect))
+				if float64(xpos) >= xMin && float64(xpos) <= xMax && float64(ypos) >= yMin && float64(ypos) <= yMax {
+					tmp := player.Hotbar[slot]
+					player.Hotbar[slot] = player.Inventory[slotInd]
+					player.Inventory[slotInd] = tmp
+				}
+			}
 		}
 	}
 }
@@ -144,11 +165,11 @@ func keyCallbackPlay(w *glfw.Window, key glfw.Key, scancode int, action glfw.Act
 		case m["Left"].Key:
 			player.LeftVel = player.WalkVel
 		case m["Mode"].Key:
-			player.GameMode++
-			if player.GameMode >= common.NumGameModes {
-				player.GameMode = 0
+			player.MovementMode++
+			if player.MovementMode >= common.NumMovementModes {
+				player.MovementMode = 0
 			}
-			if player.GameMode == common.Flying {
+			if player.MovementMode == common.Flying {
 				player.FallVel = 0
 			}
 		case m["Slot1"].Key:
@@ -177,14 +198,14 @@ func keyCallbackPlay(w *glfw.Window, key glfw.Key, scancode int, action glfw.Act
 			player.ActiveHotBarSlot = 11
 		case m["Up"].Key:
 			if cursorGrabbed(w) {
-				if player.GameMode == common.Normal {
+				if player.MovementMode == common.Normal {
 					player.HoldingJump = true
 				} else {
 					player.UpVel = player.WalkVel
 				}
 			}
 		case m["Down"].Key:
-			if cursorGrabbed(w) && player.GameMode == common.Flying {
+			if cursorGrabbed(w) && player.MovementMode == common.Flying {
 				player.DownVel = player.WalkVel
 			}
 		case m["PlanetR"].Key:
@@ -227,6 +248,7 @@ func keyCallbackPlay(w *glfw.Window, key glfw.Key, scancode int, action glfw.Act
 					break
 				}
 				if cell != nil && cell.Material != common.Air {
+					player.Inventory[0] = common.Slot{cell.Material, 1}
 					cellIndex := planet.CartesianToCellIndex(pos)
 					planetRen.SetCellMaterial(cellIndex, common.Air, true)
 					break
@@ -246,7 +268,12 @@ func keyCallbackPlay(w *glfw.Window, key glfw.Key, scancode int, action glfw.Act
 					cell := planet.CellIndexToCell(cellIndex)
 					if cell != nil && cell.Material != common.Air {
 						if prevCellIndex.Lon != -1 {
-							planetRen.SetCellMaterial(prevCellIndex, player.Hotbar[player.ActiveHotBarSlot].Material, true)
+							hotbarslot := player.Hotbar[player.ActiveHotBarSlot]
+							player.Hotbar[player.ActiveHotBarSlot].Amount--
+							if hotbarslot.Amount == 1 {
+								player.Hotbar[player.ActiveHotBarSlot] = common.Slot{}
+							}
+							planetRen.SetCellMaterial(prevCellIndex, hotbarslot.Material, true)
 						}
 						break
 					}
