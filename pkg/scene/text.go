@@ -5,8 +5,8 @@ import (
 	"math"
 
 	"github.com/go-gl/mathgl/mgl32"
-	"github.com/jeffbaumes/gogame/pkg/common"
-	"github.com/jeffbaumes/gogame/pkg/gui"
+	"github.com/jeffbaumes/buildorb/pkg/common"
+	"github.com/jeffbaumes/buildorb/pkg/gui"
 )
 
 // Text holds the text information

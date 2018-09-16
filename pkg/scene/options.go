@@ -8,8 +8,8 @@ import (
 	"strings"
 
 	"github.com/go-gl/glfw/v3.3/glfw"
-	"github.com/jeffbaumes/gogame/pkg/common"
-	"github.com/jeffbaumes/gogame/pkg/gui"
+	"github.com/jeffbaumes/buildorb/pkg/common"
+	"github.com/jeffbaumes/buildorb/pkg/gui"
 )
 
 // Option holds the information for a key binding option

@@ -40,17 +40,20 @@ type Player struct {
 	Name             string
 	ActiveHotBarSlot int
 	FocusCellIndex   CellIndex
-	// InInventory      bool
-	HotbarOn       bool
-	Hotbar         [12]int
-	renderDistance int
-	Health         int
-	// Intext         bool
-	Text     string
-	DrawText string
-	// Apex     bool
-	// InOptions        bool
-	Mode string
+	HotbarOn         bool
+	Hotbar           [12]int
+	Inventory        [64]Slot
+	renderDistance   int
+	Health           int
+	Text             string
+	DrawText         string
+	Mode             string
+}
+
+// Slot is an inventory slot
+type Slot struct {
+	Material int
+	Amount   int
 }
 
 // HitPlayerArgs are the arguments for the HitPlayer API call

@@ -9,9 +9,9 @@ import (
 
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"github.com/hashicorp/yamux"
-	"github.com/jeffbaumes/gogame/pkg/common"
-	"github.com/jeffbaumes/gogame/pkg/gui"
-	"github.com/jeffbaumes/gogame/pkg/scene"
+	"github.com/jeffbaumes/buildorb/pkg/common"
+	"github.com/jeffbaumes/buildorb/pkg/gui"
+	"github.com/jeffbaumes/buildorb/pkg/scene"
 )
 
 const (

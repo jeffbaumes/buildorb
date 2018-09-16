@@ -11,9 +11,9 @@ import (
 
 	"github.com/go-gl/gl/v4.1-core/gl"
 	"github.com/go-gl/glfw/v3.3/glfw"
-	"github.com/jeffbaumes/gogame/pkg/client"
-	"github.com/jeffbaumes/gogame/pkg/gui"
-	"github.com/jeffbaumes/gogame/pkg/server"
+	"github.com/jeffbaumes/buildorb/pkg/client"
+	"github.com/jeffbaumes/buildorb/pkg/gui"
+	"github.com/jeffbaumes/buildorb/pkg/server"
 )
 
 type profile struct {
