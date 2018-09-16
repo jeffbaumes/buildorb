@@ -63,11 +63,11 @@ func Start(name string, seed, port int) {
 	if port == 0 {
 		port = 5555
 	}
+	_ = os.Mkdir("worlds/", os.ModePerm)
 	dbName := "worlds/" + name + ".db"
 
 	db, err := sql.Open("sqlite3", dbName)
 	checkErr(err)
-
 	stmt, err := db.Prepare("CREATE TABLE IF NOT EXISTS chunk (planet INT, lon INT, lat INT, alt INT, data BLOB, PRIMARY KEY (planet, lat, lon, alt))")
 	checkErr(err)
 	_, err = stmt.Exec()
