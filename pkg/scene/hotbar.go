@@ -86,8 +86,8 @@ func (h *Hotbar) computeGeometry(player *common.Player, width, height int) {
 	points := []float32{}
 	sz := float32(0.03)
 	for m, mat := range player.Hotbar {
-		mx := float32(mat % 4)
-		my := float32(mat / 4)
+		mx := float32(mat.Material % 4)
+		my := float32(mat.Material / 4)
 		px := 1.25 * 2 * sz * (float32(m+1) - float32(len(player.Hotbar)+1)/2)
 		py := 1 - 0.1*aspect
 		scale := sz

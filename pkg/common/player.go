@@ -41,8 +41,8 @@ type Player struct {
 	ActiveHotBarSlot int
 	FocusCellIndex   CellIndex
 	HotbarOn         bool
-	Hotbar           [12]int
-	Inventory        [64]Slot
+	Hotbar           [12]Slot
+	Inventory        [48]Slot
 	renderDistance   int
 	Health           int
 	Text             string
@@ -75,7 +75,7 @@ func NewPlayer(name string) *Player {
 	p.HotbarOn = true
 	p.renderDistance = 4
 	for i := range p.Hotbar {
-		p.Hotbar[i] = i + 1
+		p.Hotbar[i] = Slot{i + 1, 10}
 	}
 	return &p
 }

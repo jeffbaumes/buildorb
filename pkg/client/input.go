@@ -112,7 +112,7 @@ func keyCallbackInventory(w *glfw.Window, key glfw.Key, scancode int, action glf
 		xMin, yMin := glToPixel(w, float64(px-scale), float64(py+scale*aspect))
 		xMax, yMax := glToPixel(w, float64(px+scale), float64(py-scale*aspect))
 		if float64(xpos) >= xMin && float64(xpos) <= xMax && float64(ypos) >= yMin && float64(ypos) <= yMax {
-			player.Hotbar[slot] = m
+			player.Hotbar[slot] = common.Slot{Material: m, Amount: 10}
 		}
 	}
 }
@@ -246,7 +246,7 @@ func keyCallbackPlay(w *glfw.Window, key glfw.Key, scancode int, action glfw.Act
 					cell := planet.CellIndexToCell(cellIndex)
 					if cell != nil && cell.Material != common.Air {
 						if prevCellIndex.Lon != -1 {
-							planetRen.SetCellMaterial(prevCellIndex, player.Hotbar[player.ActiveHotBarSlot], true)
+							planetRen.SetCellMaterial(prevCellIndex, player.Hotbar[player.ActiveHotBarSlot].Material, true)
 						}
 						break
 					}
