@@ -7,7 +7,7 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/go-gl/glfw/v3.3/glfw"
+	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/hashicorp/yamux"
 	"github.com/jeffbaumes/buildorb/pkg/common"
 	"github.com/jeffbaumes/buildorb/pkg/gui"
